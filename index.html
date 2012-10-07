@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Image searcher</title>
+
+  <script type="text/javascript" src="libs/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="js/search.js"></script>
+
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/navigation.css">
+  <link rel="stylesheet" href="css/photos.css">
+
+  <script type="text/javascript">
+    $(function() {
+      var searcher = new Searcher($('#photos')),
+          $loading = $(""),
+          offset = 0,
+          timing = 'good',
+          $footer = $('#footer');
+
+      $('#query-form').submit(function(e) {
+        searcher.load($('#query').val(), 1);
+        e.preventDefault();
+      });
+
+      $(window).scroll(function(){
+        if(timing == 'good'){
+          if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
+            timing = 'bad';
+            offset = offset + 20;
+            $footer.show();
+            searcher.next(function() {
+              timing = 'good';
+              $footer.hide();
+            });
+          };
+        };
+      });
+
+    });
+  </script>
+
+</head>
+<body>
+  <div id="navigation">
+    <div class="light">
+      <form id="query-form">
+        <span>
+          <input id="query" type="text" placeholder="Search..." class="search rounded">
+        </span>
+      </form>
+    </div>
+  </div>
+
+  <div id="content">
+    <div id="photos">
+
+    </div>
+  </div>
+
+  <div id="footer">
+    <div id="loading"></div>
+  </div>
+
+</body>
+</html>
