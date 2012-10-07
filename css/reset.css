@@ -1,0 +1,6 @@
+body {
+  padding: 0; /* Gets rid of the automatic padding */
+  margin: 0;	/*	on HTML documents */
+  font-family: Lucida Grande, Helvetica, Arial, sans-serif;
+  font-size: 12px;
+}
