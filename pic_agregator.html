@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>Flickr JSON</title>
+	<style type="text/css">
+		.b-results {
+			min-height: 790px;
+			max-width: 800px;
+		}	
+		
+		.b-results-layout{
+			position: relative;
+		}	
+		
+		.b-results__item{
+			float: left;
+			margin-left: 8px;
+			margin-bottom: 13px;
+			position: relative;
+			text-align: center;
+			vertical-align: top;
+			height: 150px;
+		}
+	</style>
+	<script type="text/javascript" src="../jquery-1.7.2.js"></script>
+	
+	<script type="text/javascript">
+		function jsonFlickrApi(rsp) {
+			window.rsp = rsp;
+			var s = "";
+			// http://farm{id}.static.flickr.com/{server-id}/{id}_{secret}_[mstb].jpg
+			// http://www.flickr.com/photos/{user-id}/{photo-id}
+			
+			s = "нашлось картинок: <b>" + rsp.photos.photo.length + "</b><br/><br/>";
+			s += "<div class=\"b-results-layout\">"; 
+			for (var i=0; i < rsp.photos.photo.length; i++) {
+			  photo = rsp.photos.photo[i];
+			  t_url = "http://farm" + photo.farm + ".static.flickr.com/" + 
+				photo.server + "/" + photo.id + "_" + photo.secret + "_" + "t.jpg";
+			  p_url = "http://www.flickr.com/photos/" + photo.owner + "/" + photo.id;
+			  s +=  '<div class="b-results__item"><a href="' + p_url + '">' + '<img alt="'+ photo.title + 
+				'"src="' + t_url + '"/>' + '</a></div>';
+			}
+			s += "</div>";
+			$('.b-results').append("<br/>" + s);
+		}
+	</script>
+
+	<script type="text/javascript">
+		function loadFlickr(){
+			$('.b-results').empty() ;
+			var tag = $('input[name$="tag"]').val();
+			$.ajax({
+				type: 'GET',
+				url: "http://api.flickr.com/services/rest/",
+				data: "method=flickr.photos.search&api_key=0b500ee4c9f850b63025dbb4dc179be1&tags=" + tag + "&per_page=100&format=json",
+				complete: function(response){
+					console.log(response);
+					eval(response.responseText);
+				},
+				dataType: 'json'
+			});
+		}
+	</script>
+</head>
+<body>
+  <input name="tag" type="text" size="50">
+  <button type="submit" onclick="loadFlickr();">Поиск</button>
+  <div class="b-results"></div>
+</body>
+</html>
